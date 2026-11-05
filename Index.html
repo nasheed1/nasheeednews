@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nasheed News</title>
+<style>
+:root{--bg:#f6f5f2;--s:#fff;--ink:#1b1f24;--mut:#5d6670;--line:#dcdad4;--red:#c8102e}
+@media (prefers-color-scheme:dark){:root{--bg:#121417;--s:#1b1f24;--ink:#eceae5;--mut:#9aa3ad;--line:#2e343b;--red:#ff4d63}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Serif Bengali","Kalpurush",Georgia,serif;line-height:1.8}
+a{color:inherit;text-decoration:none}a:hover .t{color:var(--red)}
+.w{max-width:980px;margin:0 auto;padding:0 14px}
+header{padding:14px 0}
+.logo{font-size:30px;font-weight:800;color:var(--red);line-height:1.2}
+.logo small{display:block;font-size:12px;font-weight:400;color:var(--mut)}
+nav{border-top:2px solid var(--ink);border-bottom:1px solid var(--line);background:var(--s);position:sticky;top:0;z-index:5}
+nav .w{display:flex;gap:4px;overflow-x:auto;font-family:"Noto Sans Bengali",sans-serif;font-size:15px}
+nav a{padding:10px 12px;white-space:nowrap}nav a.on{color:var(--red);font-weight:700;border-bottom:3px solid var(--red)}
+main{padding:18px 0 30px}
+.img{border-radius:4px;aspect-ratio:16/9;background:linear-gradient(135deg,var(--a),var(--b));display:grid;place-items:end start;padding:10px;color:#fffc;font:12px sans-serif}
+.tag{font:700 13px "Noto Sans Bengali",sans-serif;color:var(--red)}
+.meta{font:13px "Noto Sans Bengali",sans-serif;color:var(--mut)}
+.lead .t{font-size:clamp(24px,5vw,36px);line-height:1.3;margin:8px 0;font-weight:700}
+.lead p{color:var(--mut);margin:0}
+.grid{display:grid;gap:18px;margin-top:22px;border-top:1px solid var(--line);padding-top:18px}
+@media(min-width:600px){.grid{grid-template-columns:1fr 1fr}}
+@media(min-width:860px){.grid{grid-template-columns:repeat(3,1fr)}}
+.grid .t{font-size:18px;line-height:1.45;font-weight:700;margin:6px 0 2px}
+article{max-width:700px;margin:0 auto}
+article h1{font-size:clamp(26px,5vw,38px);line-height:1.3;margin:6px 0}
+article p{font-size:18px;margin:0 0 16px}
+.back{font:14px "Noto Sans Bengali",sans-serif;color:var(--red);display:inline-block;margin-bottom:12px}
+footer{border-top:1px solid var(--line);background:var(--s);padding:18px 0;text-align:center;color:var(--mut);font:13px "Noto Sans Bengali",sans-serif}
+</style>
+</head>
+<body>
+<header class="w"><div class="logo">Nasheed News<small>ডেমো নিউজ সাইট – Claude দিয়ে বানানো</small></div></header>
+<nav><div class="w" id="nav"></div></nav>
+<main class="w" id="app"></main>
+<footer>ডেমো সাইট। সব খবর কাল্পনিক।</footer>
+<script>
+/* ============ নতুন খবর যোগ করতে: নিচের তালিকার সবার উপরে একটা নতুন { } ব্লক বসান ============ */
+var POSTS=[
+{id:"metro-time",cat:"জাতীয়",date:"৫ নভেম্বর ২০২৬",c:["#8a1c2c","#2a1015"],
+ title:"ঢাকায় নতুন মেট্রো সময়সূচি কাল থেকে চালু",
+ summary:"যাত্রীদের সুবিধায় সকাল ও সন্ধ্যায় ট্রেনের সংখ্যা বাড়ানো হয়েছে।",
+ body:["রাজধানীতে মেট্রোরেলের নতুন সময়সূচি আগামীকাল থেকে কার্যকর হচ্ছে। কর্তৃপক্ষ জানিয়েছে, অফিসের সময়ে অপেক্ষার সময় কমানো হবে।","যাত্রীরা স্টেশনে লাগানো নোটিশ বোর্ড ও অ্যাপে হালনাগাদ তথ্য দেখতে পারবেন।"]},
+{id:"tigers-win",cat:"খেলা",date:"৫ নভেম্বর ২০২৬",c:["#2d6a4f","#12332a"],
+ title:"টাইগারদের জয়ে সিরিজে এগিয়ে বাংলাদেশ",
+ summary:"শেষ ওভারের উত্তেজনায় জিতল স্বাগতিকরা।",
+ body:["রোমাঞ্চকর ম্যাচে শেষ ওভারে জয় নিশ্চিত করেছে বাংলাদেশ। সিরিজে এখন তারা ১-০ ব্যবধানে এগিয়ে।","পরের ম্যাচ হবে শুক্রবার।"]},
+{id:"export-growth",cat:"অর্থনীতি",date:"৪ নভেম্বর ২০২৬",c:["#b5651d","#4a2a0a"],
+ title:"রপ্তানি আয়ে প্রবৃদ্ধি, পোশাকে বাড়তি চাহিদা",
+ summary:"গত মাসের তুলনায় রপ্তানি আয় বেড়েছে।",
+ body:["তৈরি পোশাক খাতে নতুন অর্ডার আসায় রপ্তানি আয়ে ইতিবাচক ধারা দেখা যাচ্ছে।","ব্যবসায়ীরা বলছেন, গ্যাস ও বিদ্যুৎ সরবরাহ স্থিতিশীল থাকলে এই ধারা বজায় থাকবে।"]},
+{id:"climate-talk",cat:"আন্তর্জাতিক",date:"৪ নভেম্বর ২০২৬",c:["#1f6f8b","#0a2f3d"],
+ title:"জলবায়ু সম্মেলনে উপকূলীয় দেশগুলোর নতুন দাবি",
+ summary:"ক্ষতিপূরণ তহবিল দ্রুত চালুর আহ্বান।",
+ body:["সম্মেলনে উপকূলীয় দেশগুলো জলবায়ু তহবিল দ্রুত কার্যকর করার দাবি জানিয়েছে।","আলোচনা চলবে আগামী সপ্তাহ পর্যন্ত।"]},
+{id:"film-trailer",cat:"বিনোদন",date:"৩ নভেম্বর ২০২৬",c:["#5b3a8c","#22123f"],
+ title:"নতুন চলচ্চিত্রের ট্রেইলার প্রকাশ",
+ summary:"দর্শকমহলে বেড়েছে আগ্রহ।",
+ body:["বহুল প্রতীক্ষিত চলচ্চিত্রের ট্রেইলার প্রকাশিত হয়েছে। প্রথম দিনেই লাখো মানুষ এটি দেখেছেন।"]}
+];
+var CATS=["সব খবর"];POSTS.forEach(function(p){if(CATS.indexOf(p.cat)<0)CATS.push(p.cat)});
+var app=document.getElementById("app"),nav=document.getElementById("nav");
+function bg(p){return "--a:"+p.c[0]+";--b:"+p.c[1]}
+function esc(s){return s.replace(/[&<>]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;"}[c]})}
+function card(p){return '<a href="#'+p.id+'"><div class="img" style="'+bg(p)+'">ছবি</div><span class="tag">'+p.cat+'</span><div class="t">'+esc(p.title)+'</div><div class="meta">'+p.date+'</div></a>'}
+function render(){
+ var h=decodeURIComponent(location.hash.slice(1)),post=POSTS.filter(function(p){return p.id===h})[0];
+ window.scrollTo(0,0);
+ if(post){
+  nav.innerHTML=CATS.map(function(c,i){return '<a href="#cat-'+i+'">'+c+'</a>'}).join("");
+  app.innerHTML='<article><a class="back" href="#">← সব খবর</a><span class="tag">'+post.cat+'</span><h1>'+esc(post.title)+'</h1><div class="meta">'+post.date+'</div><div class="img" style="margin:14px 0 20px;'+bg(post)+'">ছবি</div>'+post.body.map(function(b){return '<p>'+esc(b)+'</p>'}).join("")+'</article>';
+  document.title=post.title+" – Nasheed News";return;
+ }
+ var ci=h.indexOf("cat-")===0?+h.slice(4):0,list=ci?POSTS.filter(function(p){return p.cat===CATS[ci]}):POSTS;
+ nav.innerHTML=CATS.map(function(c,i){return '<a href="#'+(i?'cat-'+i:'')+'" class="'+(i===ci?'on':'')+'">'+c+'</a>'}).join("");
+ document.title="Nasheed News";
+ if(!list.length){app.innerHTML="<p>এই বিভাগে এখনো কোনো খবর নেই।</p>";return}
+ var l=list[0];
+ app.innerHTML='<a class="lead" href="#'+l.id+'" style="display:block"><div class="img" style="'+bg(l)+'">প্রধান খবর</div><span class="tag">'+l.cat+'</span><div class="t">'+esc(l.title)+'</div><p>'+esc(l.summary)+'</p><div class="meta">'+l.date+'</div></a><div class="grid">'+list.slice(1).map(card).join("")+'</div>';
+}
+window.addEventListener("hashchange",render);render();
+</script>
+</body>
+</html>
